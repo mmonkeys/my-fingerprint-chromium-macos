@@ -47,14 +47,6 @@ if [[ -f "$_root_dir/build_finished_$_target_cpu.log" ]] ; then
   # Verify the binary signature
   codesign --verify --deep --verbose=4 out/Default/Chromium.app
 
-  # Pepare app notarization
-  ditto -c -k --keepParent "out/Default/Chromium.app" "notarize.zip"
-
-  # Notarize the app
-  xcrun notarytool store-credentials "notarytool-profile" --apple-id "$PROD_MACOS_NOTARIZATION_APPLE_ID" --team-id "$PROD_MACOS_NOTARIZATION_TEAM_ID" --password "$PROD_MACOS_NOTARIZATION_PWD"
-  xcrun notarytool submit "notarize.zip" --keychain-profile "notarytool-profile" --wait
-  xcrun stapler staple "out/Default/Chromium.app"
-
   # Package the app
   chrome/installer/mac/pkg-dmg \
     --sourcefile --source out/Default/Chromium.app \
